@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Botwave Agent Dashboard - Claude/Razor</title>
+  <style>
+    :root {
+      --primary: #00dc82;
+      --secondary: #1a1a2e;
+      --accent: #16213e;
+      --text: #e4e4e4;
+      --text-muted: #a0a0a0;
+      --border: #2a2a4e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+    /* Header */
+    header { padding: 20px 0; border-bottom: 1px solid var(--border); }
+    header .container { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+    nav a { color: var(--text-muted); text-decoration: none; margin-left: 30px; }
+    nav a:hover { color: var(--primary); }
+
+    /* Agent Grid */
+    .agent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; padding: 40px 0; }
+    .agent-card {
+      background: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 25px;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .agent-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+    .agent-card h3 { font-size: 1.3rem; margin-bottom: 10px; color: var(--primary); }
+    .agent-card .status { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; }
+    .agent-card .status.online { color: var(--primary); }
+    .agent-card .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .agent-card button {
+      padding: 10px 20px;
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .agent-card button:hover { background: var(--primary); color: var(--secondary); }
+
+    /* Chat Panel */
+    .chat-panel {
+      position: fixed;
+      right: -500px;
+      top: 0;
+      width: 500px;
+      height: 100vh;
+      background: var(--secondary);
+      border-left: 1px solid var(--border);
+      transition: right 0.3s;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-panel.open { right: 0; }
+    .chat-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-header button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .chat-message {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: var(--accent);
+    }
+    .chat-message.user { border-left: 3px solid var(--primary); }
+    .chat-message.assistant { border-left: 3px solid var(--text-muted); }
+    .chat-input {
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input textarea {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--accent);
+      color: var(--text);
+      font-size: 1rem;
+      resize: none;
+      height: 60px;
+    }
+    .chat-input button {
+      padding: 15px 30px;
+      background: var(--primary);
+      color: var(--secondary);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      gap: 40px;
+      padding: 30px 0;
+      background: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 40px;
+    }
+    .stat { text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .stat-label { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
+
+    /* Footer */
+    footer { padding: 40px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="logo">Bot<span>wave</span> Agent</a>
+      <nav>
+        <a href="/">Landing Page</a>
+        <a href="/agent.html">Agents</a>
+        <a href="https://t.me/Boti1904">Telegram Bots</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-value" id="active-bots">7</div>
+        <div class="stat-label">Telegram Bots Active</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="local-model">Online</div>
+        <div class="stat-label">LM Studio (127.0.0.1:1234)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="calls-today">0</div>
+        <div class="stat-label">Calls Answered Today</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="revenue-captured">$0</div>
+        <div class="stat-label">Revenue Captured</div>
+      </div>
+    </div>
+
+    <h2 style="margin-bottom: 20px;">Agent Control Panel</h2>
+
+    <div class="agent-grid">
+      <!-- Local LM Studio Agent -->
+      <div class="agent-card">
+        <h3>🤖 Local LM Studio</h3>
+        <div class="status online">● Online - huihui-qwen3.5-9b-abliterated</div>
+        <p style="color: var(--text-muted); margin-bottom: 15px;">
+          Your local model running at 127.0.0.1:1234. Used by all Telegram bots for conversational flows.
+        </p>
+        <div class="actions">
+          <button onclick="openChat('lmstudio')">Chat</button>
+          <button onclick="testModel()">Test</button>
+        </div>
+      </div>
+
+      <!-- Razor Agent (local-forge) -->
+      <div class="agent-card">
+        <h3>🪙 Razor Agent</h3>
+        <div class="status">○ Standby - local-forge</div>
+        <p style="color: var(--text-muted); margin-bottom: 15px;">
+          Claude Code agent via local-forge. Runs in Docker container with full filesystem access.
+        </p>
+        <div class="actions">
+          <button onclick="openChat('razor')">Chat</button>
+          <button onclick="spawnRazor()">Spawn</button>
+          <button onclick="viewLogs()">Logs</button>
+        </div>
+      </div>
+
+      <!-- Telegram Bot Controller -->
+      <div class="agent-card">
+        <h3>📞 Botwave Hub</h3>
+        <div class="status online">● 7 Bots Running</div>
+        <p style="color: var(--text-muted); margin-bottom: 15px;">
+          Controls all 7 Telegram bots: Plumber, Electrician, HVAC, GC, Locksmith, Small Biz, Restaurant.
+        </p>
+        <div class="actions">
+          <button onclick="location.href='https://t.me/Boti1904'">Test Boti1904</button>
+          <button onclick="restartHub()">Restart Hub</button>
+        </div>
+      </div>
+
+      <!-- Vertical Estimator -->
+      <div class="agent-card">
+        <h3>💬 Vertical Estimator</h3>
+        <div class="status online">● 10 Verticals Configured</div>
+        <p style="color: var(--text-muted); margin-bottom: 15px;">
+          Conversational flows that qualify leads and return instant estimates for each business type.
+        </p>
+        <div class="actions">
+          <button onclick="testFlow()">Test Flow</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel" id="chat-panel">
+    <div class="chat-header">
+      <h3 id="chat-title">Agent Chat</h3>
+      <button onclick="closeChat()">×</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input">
+      <textarea id="chat-input" placeholder="Type your message..."></textarea>
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>Botwave Agent Dashboard - Local LM Studio + Razor Agent + Telegram Bots</p>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE = 'http://127.0.0.1:1234';
+    let currentAgent = null;
+
+    // Open chat panel
+    function openChat(agent) {
+      currentAgent = agent;
+      document.getElementById('chat-panel').classList.add('open');
+      document.getElementById('chat-title').textContent = agent === 'lmstudio' ? 'Local LM Studio Chat' : 'Razor Agent Chat';
+      document.getElementById('chat-messages').innerHTML = '';
+    }
+
+    // Close chat panel
+    function closeChat() {
+      document.getElementById('chat-panel').classList.remove('open');
+    }
+
+    // Send message to LM Studio
+    async function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const messages = document.getElementById('chat-messages');
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      // Add user message
+      messages.innerHTML += `<div class="chat-message user"><strong>You:</strong><br>${text}</div>`;
+      input.value = '';
+
+      if (currentAgent === 'lmstudio') {
+        // Call local LM Studio API
+        try {
+          const response = await fetch(`${API_BASE}/v1/chat/completions`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model: 'huihui-qwen3.5-9b-abliterated',
+              messages: [{ role: 'user', content: text }],
+              max_tokens: 1024
+            })
+          });
+          const data = await response.json();
+          const reply = data.choices?.[0]?.message?.content || 'No response';
+          messages.innerHTML += `<div class="chat-message assistant"><strong>LM Studio:</strong><br>${reply}</div>`;
+        } catch (e) {
+          messages.innerHTML += `<div class="chat-message assistant"><strong>Error:</strong><br>${e.message}</div>`;
+        }
+      } else if (currentAgent === 'razor') {
+        // For Razor, we'd call local-forge API (implement based on your setup)
+        messages.innerHTML += `<div class="chat-message assistant"><strong>Razor:</strong><br>Razor agent would process: "${text}"<br>(Connect to local-forge API for full integration)</div>`;
+      }
+
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    // Test local model
+    async function testModel() {
+      alert('Testing local LM Studio model...');
+      try {
+        const response = await fetch(`${API_BASE}/v1/chat/completions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'huihui-qwen3.5-9b-abliterated',
+            messages: [{ role: 'user', content: 'Reply with one word: OK' }],
+            max_tokens: 10
+          })
+        });
+        const data = await response.json();
+        alert('Model Response: ' + (data.choices?.[0]?.message?.content || 'No response'));
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    // Spawn Razor agent (calls local-forge)
+    function spawnRazor() {
+      alert('Spawning Razor agent via local-forge...\n\nRun: cd local-forge && npm run spawn -- razor');
+    }
+
+    // View logs
+    function viewLogs() {
+      alert('Check logs at:\n/home/gringo/Projects/botwave/logs/');
+    }
+
+    // Restart hub
+    function restartHub() {
+      alert('Restarting Botwave Hub...\n\nThis requires SSH access to restart the node process.');
+    }
+
+    // Test vertical flow
+    function testFlow() {
+      alert('Test a vertical flow by messaging any bot on Telegram:\n\n@Boti1904 (Plumber)\n/PaperChaser (Electrician)\n@Trades (HVAC)');
+    }
+
+    // Load stats from API
+    async function loadStats() {
+      try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+        document.getElementById('calls-today').textContent = data.leads || 0;
+        document.getElementById('revenue-captured').textContent = '$' + (data.leads * 450).toLocaleString();
+      } catch (e) {
+        console.log('Stats load error:', e);
+      }
+    }
+
+    // Initial load
+    loadStats();
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "botwave-empire",
+  "version": "2.0.0",
+  "description": "24/7 AI Dispatch for Plumbers - Local-first AI automation",
+  "type": "module",
+  "main": "hub.secure.js",
+  "scripts": {
+    "start": "node hub.secure.js",
+    "start:dashboard": "node server.js",
+    "test": "echo \"No tests specified\" && exit 0",
+    "demo": "python scripts/sk_investor_demo.py --full",
+    "cost-calc": "python scripts/sk_cost_calc.py --interactive"
+  },
+  "keywords": [
+    "ai",
+    "plumbing",
+    "dispatch",
+    "automation",
+    "telegram-bot",
+    "llm"
+  ],
+  "author": "Botwave Empire",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "grammy": "^1.41.1"
+  }
+}

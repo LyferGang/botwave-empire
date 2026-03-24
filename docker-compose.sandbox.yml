@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  agent-sandbox:
+    build: 
+      context: .
+      dockerfile: Dockerfile.agent
+    environment:
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - MODEL_NAME=qwen2.5:7b
+      - MCP_ENABLED=true
+    volumes:
+      - ./workspace:/workspace
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    network_mode: "bridge"

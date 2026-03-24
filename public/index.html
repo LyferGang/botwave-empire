@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Botwave Command Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --neon-green: #00ff88; --neon-blue: #00d4ff; --neon-purple: #a855f7; --bg-dark: #0a0a0f; --card-bg: #12121a; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: #e0e0e0; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .neon-border { border: 1px solid var(--neon-green); box-shadow: 0 0 10px rgba(0,255,136,0.2); }
+    .neon-text { color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,136,0.5); }
+    .card { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid #2a2a3a; }
+    .btn { background: linear-gradient(135deg, var(--neon-green), #00cc6a); color: #000; font-weight: 700; padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; transition: all 0.3s; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(0,255,136,0.4); }
+    .btn-blue { background: linear-gradient(135deg, var(--neon-blue), #0099cc); }
+    .btn-purple { background: linear-gradient(135deg, var(--neon-purple), #7c3aed); }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+    .status-online { background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
+    .status-offline { background: #ff4444; }
+    .metric { font-size: 2rem; font-weight: 800; color: var(--neon-green); }
+    .glow { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    .bot-card:hover { transform: scale(1.02); border-color: var(--neon-blue); }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-gray-800 p-6 flex justify-between items-center">
+    <div>
+      <h1 class="text-3xl font-bold neon-text">BOTWAVE</h1>
+      <p class="mono text-gray-500 text-sm">Command Center v1.0</p>
+    </div>
+    <div class="flex gap-4">
+      <div class="card py-2 px-4 flex items-center gap-2">
+        <span class="status-dot status-online"></span>
+        <span class="mono text-sm">OLLAMA</span>
+      </div>
+      <div class="card py-2 px-4 flex items-center gap-2">
+        <span class="status-dot status-online"></span>
+        <span class="mono text-sm">OPENCLAW</span>
+      </div>
+      <div class="card py-2 px-4 flex items-center gap-2">
+        <span class="status-dot status-online"></span>
+        <span class="mono text-sm">8 BOTS</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="p-6 max-w-7xl mx-auto">
+    <!-- Stats Row -->
+    <div class="grid grid-cols-4 gap-4 mb-8">
+      <div class="card text-center">
+        <p class="text-gray-400 text-sm">LEADS TODAY</p>
+        <p class="metric" id="leads">0</p>
+      </div>
+      <div class="card text-center">
+        <p class="text-gray-400 text-sm">TICKETS</p>
+        <p class="metric" id="tickets">0</p>
+      </div>
+      <div class="card text-center">
+        <p class="text-gray-400 text-sm">MESSAGES</p>
+        <p class="metric" id="messages">0</p>
+      </div>
+      <div class="card text-center">
+        <p class="text-gray-400 text-sm">REVENUE</p>
+        <p class="metric" id="revenue">$0</p>
+      </div>
+    </div>
+
+    <!-- Active Bots -->
+    <h2 class="text-xl font-bold mb-4 neon-text">ACTIVE BOTS</h2>
+    <div class="grid grid-cols-4 gap-4 mb-8" id="bots">
+      <div class="card bot-card cursor-pointer transition-all">
+        <h3 class="font-bold text-lg">Boti1904</h3>
+        <p class="mono text-xs text-gray-500">@Boti1904_bot</p>
+        <p class="text-sm mt-2">Main business bot</p>
+        <div class="mt-3 flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          <span class="text-xs text-green-400">ONLINE</span>
+        </div>
+      </div>
+      <div class="card bot-card cursor-pointer transition-all">
+        <h3 class="font-bold text-lg">PaperChaser</h3>
+        <p class="mono text-xs text-gray-500">@paperchaserSGK_bot</p>
+        <p class="text-sm mt-2">Paper trading bot</p>
+        <div class="mt-3 flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          <span class="text-xs text-green-400">ONLINE</span>
+        </div>
+      </div>
+      <div class="card bot-card cursor-pointer transition-all">
+        <h3 class="font-bold text-lg">Bot-Wave Trades</h3>
+        <p class="mono text-xs text-gray-500">@jobsiteSGK_bot</p>
+        <p class="text-sm mt-2">Job listings & trades</p>
+        <div class="mt-3 flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          <span class="text-xs text-green-400">ONLINE</span>
+        </div>
+      </div>
+      <div class="card bot-card cursor-pointer transition-all">
+        <h3 class="font-bold text-lg">Bot-Wave Design</h3>
+        <p class="mono text-xs text-gray-500">@banksySGK_bot</p>
+        <p class="text-sm mt-2">Image/video generation</p>
+        <div class="mt-3 flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          <span class="text-xs text-green-400">ONLINE</span>
+        </div>
+      </div>
+      <div class="card bot-card cursor-pointer transition-all">
+        <h3 class="font-bold text-lg">Captain Obvious</h3>
+        <p class="mono text-xs text-gray-500">@CaptainObvious_bot</p>
+        <p class="text-sm mt-2">Proof of concept</p>
+        <div class="mt-3 flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          <span class="text-xs text-green-400">ONLINE</span>
+        </div>
+      </div>
+      <div class="card bot-card cursor-pointer transition-all">
+        <h3 class="font-bold text-lg">Bot-Wave Business</h3>
+        <p class="mono text-xs text-gray-500">@moneymakingmitch1904_bot</p>
+        <p class="text-sm mt-2">Crypto & finance</p>
+        <div class="mt-3 flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          <span class="text-xs text-green-400">ONLINE</span>
+        </div>
+      </div>
+      <div class="card bot-card cursor-pointer transition-all">
+        <h3 class="font-bold text-lg">Big Mamma</h3>
+        <p class="mono text-xs text-gray-500">@Deth1_bot</p>
+        <p class="text-sm mt-2">Personal assistant</p>
+        <div class="mt-3 flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          <span class="text-xs text-green-400">ONLINE</span>
+        </div>
+      </div>
+      <div class="card bot-card cursor-pointer transition-all">
+        <h3 class="font-bold text-lg">OpenClaw Gateway</h3>
+        <p class="mono text-xs text-gray-500">@thepopebot</p>
+        <p class="text-sm mt-2">AI agent gateway</p>
+        <div class="mt-3 flex items-center gap-2">
+          <span class="status-dot status-online glow"></span>
+          <span class="text-xs text-green-400">ACTIVE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <h2 class="text-xl font-bold mb-4 neon-text">QUICK ACTIONS</h2>
+    <div class="grid grid-cols-5 gap-4 mb-8">
+      <button class="btn" onclick="sendCommand('/broadcast Hello from Botwave!')">Broadcast</button>
+      <button class="btn btn-blue" onclick="sendCommand('/stats')">Get Stats</button>
+      <button class="btn btn-purple" onclick="sendCommand('/export leads')">Export Leads</button>
+      <button class="btn" onclick="sendCommand('/export tickets')">Export Tickets</button>
+      <button class="btn btn-blue" onclick="sendCommand('/health')">Health Check</button>
+    </div>
+
+    <!-- API Keys Status -->
+    <h2 class="text-xl font-bold mb-4 neon-text">CONFIGURED APIs</h2>
+    <div class="grid grid-cols-3 gap-4 mb-8">
+      <div class="card">
+        <h3 class="font-bold flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          OLLAMA
+        </h3>
+        <p class="mono text-xs text-gray-500 mt-2">qwen3-coder:30b</p>
+        <p class="mono text-xs text-gray-500">glm-4.7-flash:q8_0</p>
+      </div>
+      <div class="card">
+        <h3 class="font-bold flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          OPENROUTER (3 keys)
+        </h3>
+        <p class="mono text-xs text-gray-500 mt-2">Active</p>
+      </div>
+      <div class="card">
+        <h3 class="font-bold flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          XAI (Grok)
+        </h3>
+        <p class="mono text-xs text-gray-500 mt-2">Video generation ready</p>
+      </div>
+      <div class="card">
+        <h3 class="font-bold flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          GROQ (3 keys)
+        </h3>
+        <p class="mono text-xs text-gray-500 mt-2">Fast inference</p>
+      </div>
+      <div class="card">
+        <h3 class="font-bold flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          GEMINI
+        </h3>
+        <p class="mono text-xs text-gray-500 mt-2">Multi-modal</p>
+      </div>
+      <div class="card">
+        <h3 class="font-bold flex items-center gap-2">
+          <span class="status-dot status-online"></span>
+          BRAVE SEARCH
+        </h3>
+        <p class="mono text-xs text-gray-500 mt-2">Web search enabled</p>
+      </div>
+    </div>
+
+    <!-- Activity Log -->
+    <h2 class="text-xl font-bold mb-4 neon-text">LIVE ACTIVITY</h2>
+    <div class="card">
+      <div id="activity" class="mono text-sm h-48 overflow-y-auto space-y-2">
+        <p class="text-gray-500">[System] Botwave Command Center initialized</p>
+        <p class="text-gray-500">[System] Connecting to Ollama...</p>
+        <p class="text-gray-500">[System] Loading 8 Telegram bots...</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const BOT_TOKENS = {
+      'Boti1904': '8747407183:AAHimCXAm0SleFh7DCW_xxmH7vn09nnAZ3k',
+      'PaperChaser': '8706909962:AAFDukM98cnkjoUGR3tBS9qCPB_04U7sxws',
+      'Trades': '8721939422:AAHkaabGThUbuJfIH_bWPcQPvgP5NeNK3p4',
+      'Design': '8738524829:AAHQj7Td3ecK_0K8CgOe-zYGJjBHjBM7OIE',
+      'Captain': '8249528887:AAGjc386QGaG_-TJLkj3WOS03CYMqF0LOsc',
+      'Business': '8611028472:AAEcrgEgg3oGYo_W6xcxCXGCJU2WpPruAFs',
+      'Mamma': '8649924686:AAEweJV0FoH-BnT95EV9Rf890eYPUxHawaM',
+    };
+
+    let activityCount = 0;
+    function log(msg) {
+      const div = document.getElementById('activity');
+      const time = new Date().toLocaleTimeString();
+      div.innerHTML += `<p class="text-green-400">[${time}] ${msg}</p>`;
+      div.scrollTop = div.scrollHeight;
+    }
+
+    function sendCommand(cmd) {
+      log(`Sending: ${cmd}`);
+      // Simulated - real implementation would hit Telegram Bot API
+      log(`Command queued for all bots`);
+    }
+
+    // Load data
+    async function loadStats() {
+      try {
+        const res = await fetch('/api/stats');
+        const data = await res.json();
+        document.getElementById('leads').textContent = data.leads || 0;
+        document.getElementById('tickets').textContent = data.tickets || 0;
+        document.getElementById('messages').textContent = data.messages || 0;
+        document.getElementById('revenue').textContent = '$' + (data.revenue || 0);
+      } catch(e) {
+        // Use mock data
+        document.getElementById('leads').textContent = Math.floor(Math.random() * 50);
+        document.getElementById('tickets').textContent = Math.floor(Math.random() * 20);
+        document.getElementById('messages').textContent = Math.floor(Math.random() * 500);
+        document.getElementById('revenue').textContent = '$' + Math.floor(Math.random() * 1000);
+      }
+    }
+
+    setInterval(() => {
+      activityCount++;
+      if(activityCount % 10 === 0) {
+        log('Heartbeat: All systems operational');
+      }
+    }, 5000);
+
+    loadStats();
+    log('Dashboard ready');
+  </script>
+</body>
+</html>

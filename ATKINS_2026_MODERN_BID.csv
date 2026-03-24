@@ -1,0 +1,9 @@
+Type,Description,Quantity,Unit Price,Line Total
+Material,50 Feet Of 3-Inch Pvc,50.0,$5.50,$275.00
+Material,2 Toilets,2.0,$250.00,$500.00
+Material,50-Gallon Water Heater,1.0,$850.00,$850.00
+Labor,Rough-in & Install,40.0,$125.00/hr,$5000.00
+
+,,,Subtotal:,$6625.00
+,,,Profit Markup (20%):,$1325.00
+,,,FINAL BID TOTAL:,$7950.00

@@ -1,0 +1,16 @@
+services:
+  local-ai:
+    image: [LOCAL_AI_IMAGE]
+    ports:
+      - "[LOCAL_PORT]:[LOCAL_PORT]"
+    volumes:
+      - local-data:/data
+
+  gateway:
+    image: [GATEWAY_IMAGE]
+    ports:
+      - "[CUSTOM_PORT]:[CUSTOM_PORT]"
+    environment:
+      - LOCAL_HOST=http://local-ai:[LOCAL_PORT]
+    depends_on:
+      - local-ai

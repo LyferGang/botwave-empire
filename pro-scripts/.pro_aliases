@@ -1,0 +1,275 @@
+# ============================================================
+# DETH1 PRO ALIASES - Professional Botwave Control
+# ============================================================
+# Add to ~/.bash_aliases or source this file
+# Usage: source ~/Projects/botwave/pro-scripts/.pro_aliases
+
+# Colors for output
+export DETH_RED='\033[0;31m'
+export DETH_GREEN='\033[0;32m'
+export DETH_YELLOW='\033[1;33m'
+export DETH_BLUE='\033[0;34m'
+export DETH_CYAN='\033[0;36m'
+export DETH_NC='\033[0m'
+
+# ============================================================
+# CORE NAVIGATION
+# ============================================================
+alias bw='cd /home/gringo/Projects/botwave && pwd'
+alias bwcd='cd /home/gringo/Projects/botwave'
+alias bwlocal='cd /home/gringo/Projects/botwave/local-forge'
+
+# ============================================================
+# RAZOR / DETH1 MASTER CONTROL
+# ============================================================
+
+# Quick status - one command empire overview
+alias deth='~/Projects/botwave/pro-scripts/deth-status.sh'
+alias deth-status='~/Projects/botwave/pro-scripts/deth-status.sh'
+
+# Spawn agents (pro shortcuts)
+alias deth-claude='~/Projects/botwave/pro-scripts/spawn-agent.sh claude'
+alias deth-aider='~/Projects/botwave/pro-scripts/spawn-agent.sh aider'
+alias deth-kali='~/Projects/botwave/pro-scripts/spawn-agent.sh kali'
+alias deth-code='~/Projects/botwave/pro-scripts/spawn-agent.sh claude'
+
+# Quick task assignment
+alias deth-task='~/Projects/botwave/pro-scripts/quick-task.sh'
+alias dt='~/Projects/botwave/pro-scripts/quick-task.sh'
+
+# Stop agents
+alias deth-stop='~/Projects/botwave/pro-scripts/stop-agent.sh'
+alias deth-kill='~/Projects/botwave/pro-scripts/stop-agent.sh'
+
+# View logs
+alias deth-logs='~/Projects/botwave/pro-scripts/view-logs.sh'
+alias dl='~/Projects/botwave/pro-scripts/view-logs.sh'
+
+# Node control
+alias deth-nodes='~/Projects/botwave/pro-scripts/node-check.sh'
+alias dn='~/Projects/botwave/pro-scripts/node-check.sh'
+alias deth-ssh='~/Projects/botwave/pro-scripts/ssh-node.sh'
+
+# ============================================================
+# TELEGRAM BOT CONTROL (Direct API)
+# ============================================================
+
+# Send commands to @deth1_bot via Telegram CLI if available
+alias deth-tg='~/Projects/botwave/pro-scripts/tg-command.sh'
+
+# Quick Telegram messages
+alias deth-msg='~/Projects/botwave/pro-scripts/send-tg.sh'
+alias dm='~/Projects/botwave/pro-scripts/send-tg.sh'
+
+# ============================================================
+# SYSTEM CONTROL
+# ============================================================
+
+# Start/stop services
+alias deth-up='sudo systemctl start razor-master botwave-hub && echo -e "${DETH_GREEN}✓ Empire online${DETH_NC}"'
+alias deth-down='sudo systemctl stop razor-master botwave-hub && echo -e "${DETH_RED}✓ Empire offline${DETH_NC}"'
+alias deth-restart='sudo systemctl restart razor-master && echo -e "${DETH_GREEN}✓ Razor restarted${DETH_NC}"'
+
+# Check if running
+alias deth-ps='ps aux | grep -E "razor-master|hub.secure" | grep -v grep'
+alias deth-running='~/Projects/botwave/pro-scripts/check-running.sh'
+
+# View systemd logs
+alias deth-journal='sudo journalctl -u razor-master -f'
+alias deth-syslog='sudo journalctl -u razor-master --since "1 hour ago"'
+
+# ============================================================
+# MESH / TAILSCALE
+# ============================================================
+
+alias mesh='~/Projects/botwave/pro-scripts/mesh-status.sh'
+alias mesh-up='sudo systemctl start tailscaled && sudo tailscale up'
+alias mesh-down='sudo tailscale down'
+alias mesh-ssh='~/Projects/botwave/pro-scripts/mesh-ssh.sh'
+
+# Quick SSH to nodes
+alias ssh-pop='ssh gringo@100.124.152.86'
+alias ssh-fyl='ssh lyfer1904@100.114.102.1'
+alias ssh-razor='ssh gringo@100.124.152.86 -t "cd /home/gringo/Projects/botwave && bash"'
+alias ssh-kali='ssh lyfer1904@100.114.102.1 -t "tmux new-session -A -s kali"'
+
+# ============================================================
+# FILE OPERATIONS
+# ============================================================
+
+# Quick edit common files
+alias bwenv='nano /home/gringo/Projects/botwave/.env'
+alias bwhub='nano /home/gringo/Projects/botwave/hub.secure.js'
+alias bwrazor='nano /home/gringo/Projects/botwave/razor-master.js'
+
+# Quick git
+alias bwgit='cd /home/gringo/Projects/botwave && git'
+alias bwstatus='cd /home/gringo/Projects/botwave && git status'
+alias bwcommit='cd /home/gringo/Projects/botwave && git commit -am'
+alias bwpush='cd /home/gringo/Projects/botwave && git push'
+
+# ============================================================
+# DEVELOPMENT
+# ============================================================
+
+# Test APIs
+alias bwtest='~/Projects/botwave/pro-scripts/test-api.sh'
+alias bwcurl='~/Projects/botwave/pro-scripts/test-api.sh'
+
+# Local LLM
+alias lmstatus='curl -s http://127.0.0.1:1234/v1/models | jq -r ".data[0].id" 2>/dev/null || echo "LM Studio offline"'
+alias lmup='~/Projects/botwave/pro-scripts/start-lmstudio.sh 2>/dev/null || echo "Start LM Studio manually"'
+
+# ============================================================
+# MONITORING
+# ============================================================
+
+# Quick stats
+alias bwstats='~/Projects/botwave/pro-scripts/empire-stats.sh'
+alias bwleads='cat /home/gringo/Projects/botwave/data/leads.json 2>/dev/null | jq ".[-5:]" || echo "No leads yet"'
+alias bwlogs='tail -50 /home/gringo/Projects/botwave/logs/audit_$(date +%Y-%m-%d).log 2>/dev/null || echo "No logs today"'
+
+# ============================================================
+# PRO FUNCTIONS
+# ============================================================
+
+# Spawn agent with task (interactive)
+deth-do() {
+    local agent=$1
+    shift
+    local task="$@"
+    if [ -z "$agent" ] || [ -z "$task" ]; then
+        echo -e "${DETH_YELLOW}Usage: deth-do [agent] [task]${DETH_NC}"
+        echo -e "Example: deth-do claude fix the auth bug"
+        return 1
+    fi
+    ~/Projects/botwave/pro-scripts/spawn-agent.sh "$agent" "$task"
+}
+
+# Quick code fix
+deth-fix() {
+    local file=$1
+    shift
+    local desc="$@"
+    if [ -z "$file" ]; then
+        echo -e "${DETH_YELLOW}Usage: deth-fix [file] [description]${DETH_NC}"
+        return 1
+    fi
+    ~/Projects/botwave/pro-scripts/spawn-agent.sh claude "Fix $file: $desc"
+}
+
+# Spawn agent and tail logs
+deth-watch() {
+    local agent=$1
+    ~/Projects/botwave/pro-scripts/spawn-agent.sh "$agent"
+    sleep 2
+    ~/Projects/botwave/pro-scripts/view-logs.sh "$agent"
+}
+
+# Emergency stop all
+deth-panic() {
+    echo -e "${DETH_RED}🚨 STOPPING ALL AGENTS${DETH_NC}"
+    pkill -f "razor-master" 2>/dev/null
+    pkill -f "agent-bridge" 2>/dev/null
+    pkill -f "claude" 2>/dev/null
+    pkill -f "aider" 2>/dev/null
+    sudo systemctl stop razor-master botwave-hub 2>/dev/null
+    echo -e "${DETH_GREEN}✓ All stopped${DETH_NC}"
+}
+
+# Quick deploy (git push + restart)
+deth-deploy() {
+    cd /home/gringo/Projects/botwave
+    git add -A 2>/dev/null
+    git commit -m "deploy: $(date +%H:%M)" 2>/dev/null
+    git push 2>/dev/null
+    sudo systemctl restart razor-master
+    echo -e "${DETH_GREEN}✓ Deployed and restarted${DETH_NC}"
+}
+
+# Interactive mode (pro prompt)
+deth-pro() {
+    export PS1='\[\033[0;36m\]deth\[\033[0m\]:\[\033[0;32m\]\w\[\033[0m\]\$ '
+    alias ls='ls --color=auto'
+    alias ll='ls -alF'
+    clear
+    echo -e "${DETH_CYAN}"
+    echo "╔═══════════════════════════════════════╗"
+    echo "║      DETH1 PRO MODE ACTIVATED         ║"
+    echo "║                                       ║"
+    echo "║  Commands: deth, dt, dl, dn, mesh     ║"
+    echo "║  Agents:   deth-code, deth-kali       ║"
+    echo "║  Help:     deth-help                  ║"
+    echo "╚═══════════════════════════════════════╝"
+    echo -e "${DETH_NC}"
+    deth-status
+}
+
+# Show help
+deth-help() {
+    echo -e "${DETH_CYAN}"
+    cat << 'EOF'
+╔════════════════════════════════════════════════════════════════╗
+║                    DETH1 PRO COMMANDS                          ║
+╠════════════════════════════════════════════════════════════════╣
+║ CORE                                                           ║
+║   deth, deth-status    → Empire overview                      ║
+║   deth-up              → Start all services                   ║
+║   deth-down            → Stop all services                    ║
+║   deth-restart         → Restart Razor                        ║
+║                                                                ║
+║ AGENTS                                                         ║
+║   deth-claude [task]   → Spawn Claude agent                   ║
+║   deth-aider [task]    → Spawn Aider agent                    ║
+║   deth-kali [task]     → Spawn Kali agent                     ║
+║   deth-do [agent] [task] → Spawn with task                    ║
+║   deth-fix [file] [desc] → Quick code fix                     ║
+║   deth-stop [agent]    → Stop agent                           ║
+║   deth-watch [agent]   → Spawn and tail logs                  ║
+║   dt [agent] [task]    → Quick task alias                     ║
+║                                                                ║
+║ MONITORING                                                     ║
+║   deth-logs, dl        → View logs                            ║
+║   deth-nodes, dn       → Check mesh nodes                     ║
+║   deth-ps              → Running processes                    ║
+║   deth-journal         → Systemd logs                         ║
+║   bwstats              → Empire stats                           ║
+║                                                                ║
+║ MESH                                                           ║
+║   mesh                 → Mesh status                          ║
+║   mesh-ssh [node]      → SSH to node                          ║
+║   ssh-razor            → SSH to desktop                       ║
+║   ssh-kali             → SSH to Kali                          ║
+║                                                                ║
+║ TELEGRAM                                                       ║
+║   dm [message]         → Send Telegram message                ║
+║   deth-tg [cmd]        → Send bot command                     ║
+║                                                                ║
+║ DEVELOPMENT                                                    ║
+║   bwtest               → Test API endpoints                   ║
+║   lmstatus             → Check LM Studio                      ║
+║   deth-deploy          → Git push + restart                     ║
+║                                                                ║
+║ PRO MODE                                                       ║
+║   deth-pro             → Enhanced prompt mode                 ║
+║   deth-panic           → Emergency stop all                   ║
+╚════════════════════════════════════════════════════════════════╝
+EOF
+    echo -e "${DETH_NC}"
+}
+
+# Auto-complete for deth commands
+if [ -n "$BASH_VERSION" ]; then
+    _deth_complete() {
+        local cur="${COMP_WORDS[COMP_CWORD]}"
+        local agents="claude aider kali"
+        COMPREPLY=( $(compgen -W "$agents" -- "$cur") )
+    }
+    complete -F _deth_complete deth-do deth-watch dt deth-stop
+fi
+
+# Export functions for subshells
+export -f deth-do deth-fix deth-watch deth-panic deth-deploy deth-pro deth-help 2>/dev/null
+
+echo -e "${DETH_GREEN}✓ DETH1 Pro Aliases loaded${DETH_NC}"
+echo -e "Run ${DETH_CYAN}deth-help${DETH_NC} for commands or ${DETH_CYAN}deth-pro${DETH_NC} for pro mode"

@@ -1,0 +1,43 @@
+[Unit]
+Description=Razor Master Agent - OpenClaw Controller
+Documentation=https://github.com/gringo/botwave
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=gringo
+Group=gringo
+WorkingDirectory=/home/gringo/Projects/botwave
+
+# Load environment
+Environment="PATH=/usr/local/bin:/usr/bin:/bin:/home/gringo/.local/bin"
+Environment="HOME=/home/gringo"
+EnvironmentFile=/home/gringo/Projects/botwave/.env
+
+# Main command
+ExecStart=/usr/bin/node razor-master.js
+
+# Restart policy - always restart on failure
+Restart=always
+RestartSec=10
+StartLimitInterval=60s
+StartLimitBurst=3
+
+# Graceful shutdown
+TimeoutStopSec=30
+KillSignal=SIGTERM
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=razor-master
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+ReadWritePaths=/home/gringo/Projects/botwave
+
+[Install]
+WantedBy=multi-user.target

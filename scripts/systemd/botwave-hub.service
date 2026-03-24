@@ -1,0 +1,37 @@
+[Unit]
+Description=Botwave Hub - Telegram Bot Empire
+Documentation=https://github.com/gringo/botwave
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=gringo
+Group=gringo
+WorkingDirectory=/home/gringo/Projects/botwave
+
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="HOME=/home/gringo"
+EnvironmentFile=/home/gringo/Projects/botwave/.env
+
+ExecStart=/usr/bin/node hub.secure.js
+
+Restart=always
+RestartSec=10
+StartLimitInterval=60s
+StartLimitBurst=3
+
+TimeoutStopSec=30
+KillSignal=SIGTERM
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=botwave-hub
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+ReadWritePaths=/home/gringo/Projects/botwave
+
+[Install]
+WantedBy=multi-user.target

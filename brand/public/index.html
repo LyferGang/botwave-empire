@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Botwave - Never Miss Another Customer Call</title>
+  <meta name="description" content="Answers your phone 24/7. Books jobs while you sleep. Cheaper than hiring. One captured call pays for the month.">
+  <style>
+    :root {
+      --primary: #00dc82;
+      --secondary: #1a1a2e;
+      --accent: #16213e;
+      --text: #e4e4e4;
+      --text-muted: #a0a0a0;
+      --border: #2a2a4e;
+      --success: #00dc82;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* Header */
+    header { padding: 20px 0; border-bottom: 1px solid var(--border); }
+    header .container { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+    .logo span { color: var(--text); }
+    nav a { color: var(--text-muted); text-decoration: none; margin-left: 30px; transition: color 0.3s; }
+    nav a:hover { color: var(--primary); }
+
+    /* Hero */
+    .hero { padding: 100px 0; text-align: center; }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, var(--primary), #00ff95);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 40px; }
+    .hero .highlight { color: var(--primary); font-weight: 600; }
+
+    /* Loss Calculator */
+    .loss-calc {
+      background: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto 60px;
+    }
+    .loss-calc h3 { font-size: 1.5rem; margin-bottom: 20px; text-align: center; }
+    .loss-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    .loss-input { display: flex; flex-direction: column; gap: 8px; }
+    .loss-input label { color: var(--text-muted); font-size: 0.9rem; }
+    .loss-input select, .loss-input input {
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--secondary);
+      color: var(--text);
+      font-size: 1rem;
+    }
+    .loss-result {
+      background: rgba(0, 220, 130, 0.1);
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      padding: 25px;
+      text-align: center;
+    }
+    .loss-result .amount { font-size: 2.5rem; font-weight: 700; color: var(--danger); }
+    .loss-result .label { color: var(--text-muted); margin-top: 5px; }
+    .loss-result .savings { color: var(--primary); font-weight: 600; margin-top: 10px; }
+
+    /* Verticals */
+    .verticals { padding: 100px 0; }
+    .verticals h2 { font-size: 2.5rem; text-align: center; margin-bottom: 30px; }
+    .verticals .subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 60px; }
+    .vertical-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+    .vertical-card {
+      background: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 30px;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .vertical-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+    .vertical-card .icon { font-size: 2.5rem; margin-bottom: 15px; }
+    .vertical-card h3 { font-size: 1.3rem; margin-bottom: 10px; }
+    .vertical-card .loss { color: var(--danger); font-weight: 600; margin-bottom: 15px; }
+    .vertical-card .solution { color: var(--text-muted); margin-bottom: 20px; }
+    .vertical-card .price { color: var(--primary); font-weight: 600; }
+
+    /* Pricing */
+    .pricing { padding: 100px 0; background: var(--secondary); }
+    .pricing h2 { font-size: 2.5rem; text-align: center; margin-bottom: 30px; }
+    .pricing .subtitle { text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 60px; }
+    .pricing-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto; }
+    .card {
+      background: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      transition: transform 0.3s, border-color 0.3s;
+      position: relative;
+    }
+    .card:hover { transform: translateY(-10px); border-color: var(--primary); }
+    .card.featured { border-color: var(--primary); box-shadow: 0 0 30px rgba(0, 220, 130, 0.2); }
+    .card.featured::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: var(--secondary);
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .card h3 { font-size: 1.5rem; margin-bottom: 10px; }
+    .card .price { font-size: 3rem; font-weight: 700; color: var(--primary); margin-bottom: 5px; }
+    .card .period { color: var(--text-muted); margin-bottom: 30px; }
+    .card ul { list-style: none; text-align: left; margin-bottom: 30px; }
+    .card li { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .card li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+    .card button {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--primary);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .card button:hover { background: var(--primary); color: var(--secondary); }
+    .card.featured button { background: var(--primary); color: var(--secondary); }
+
+    /* Demo CTA */
+    .demo-cta {
+      padding: 100px 0;
+      text-align: center;
+    }
+    .demo-cta h2 { font-size: 2.5rem; margin-bottom: 20px; }
+    .demo-cta p { color: var(--text-muted); max-width: 600px; margin: 0 auto 40px; }
+    .demo-cta .phone-demo {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      margin: 0 auto 40px;
+    }
+    .demo-cta .phone-demo .step { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; text-align: left; }
+    .demo-cta .phone-demo .step-num {
+      background: var(--primary);
+      color: var(--secondary);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    footer { padding: 40px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); }
+    footer a { color: var(--primary); text-decoration: none; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.5rem; }
+      .loss-calc { padding: 25px; }
+      .loss-grid { grid-template-columns: 1fr; }
+      .vertical-grid { grid-template-columns: 1fr; }
+      .pricing-cards { grid-template-columns: 1fr; }
+      header .container { flex-direction: column; gap: 20px; }
+      nav a { margin: 0 15px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="logo">Bot<span>wave</span></a>
+      <nav>
+        <a href="#verticals">Businesses</a>
+        <a href="#calculator">Loss Calculator</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#demo">See Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Never Miss Another Customer Call</h1>
+      <p>
+        Your phone goes to voicemail at night. Customer calls your competitor. That's <span class="highlight">$300-500 lost</span>.
+        <br><br>
+        Botwave answers 24/7. Books jobs. Dispatches you. <span class="highlight">One captured call pays for the month.</span> Everything else is profit.
+      </p>
+    </div>
+  </section>
+
+  <section class="loss-calc" id="calculator">
+    <h3>Calculate Your Lost Revenue</h3>
+    <div class="loss-grid">
+      <div class="loss-input">
+        <label>Business Type</label>
+        <select id="business-type">
+          <option value="plumber">Plumber</option>
+          <option value="electrician">Electrician</option>
+          <option value="hvac">HVAC</option>
+          <option value="locksmith">Locksmith</option>
+          <option value="gc">General Contractor</option>
+          <option value="retail">Retail/Shop</option>
+          <option value="restaurant">Restaurant</option>
+        </select>
+      </div>
+      <div class="loss-input">
+        <label>Missed Calls Per Week</label>
+        <input type="number" id="missed-calls" value="5" min="1" max="50">
+      </div>
+      <div class="loss-input">
+        <label>Avg Job Value ($)</label>
+        <input type="number" id="job-value" value="450" min="50" step="50">
+      </div>
+    </div>
+    <div class="loss-result">
+      <div class="amount" id="monthly-loss">$9,000</div>
+      <div class="label">Lost Per Month</div>
+      <div class="savings" id="botwave-savings">$8,601/mo profit with Botwave</div>
+    </div>
+  </section>
+
+  <section class="verticals" id="verticals">
+    <div class="container">
+      <h2>7 Businesses. 7 Bots. All Answered 24/7.</h2>
+      <p class="subtitle">No AI jargon. Just answered phones and more customers.</p>
+      <div class="vertical-grid">
+        <div class="vertical-card">
+          <div class="icon">🚨</div>
+          <h3>Plumber (Boti1904)</h3>
+          <div class="loss">Loses $9,000-18,000/mo in missed calls</div>
+          <div class="solution">Answers emergency calls 24/7. Dispatches plumber in 15 min. One $450 job pays for everything.</div>
+          <div class="price">$399/mo</div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="icon">⚡</div>
+          <h3>Electrician (PaperChaser)</h3>
+          <div class="loss">Loses $4,200-7,000/mo in missed calls</div>
+          <div class="solution">Answers dangerous calls (sparks/smoke). Qualifies jobs. Dispatches within 30 min.</div>
+          <div class="price">$399/mo</div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="icon">❄️🔥</div>
+          <h3>HVAC (Trades)</h3>
+          <div class="loss">Loses $16,000-32,000/mo (summer)</div>
+          <div class="solution">AC/heat emergencies answered 24/7. Books jobs while you sleep. Peak season = pure profit.</div>
+          <div class="price">$399/mo</div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="icon">🔑</div>
+          <h3>Locksmith (Captain)</h3>
+          <div class="loss">Loses $4,000-6,400/mo after-hours</div>
+          <div class="solution">11 PM lockout? Bot answers. Dispatches locksmith in 20 min. $200 captured per call.</div>
+          <div class="price">$349/mo</div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="icon">🏗️</div>
+          <h3>General Contractor (Design)</h3>
+          <div class="loss">Loses $50,000-200,000/mo in leads</div>
+          <div class="solution">Remodel leads captured 24/7. Qualifies budget. Books site visits. One kitchen = $50k.</div>
+          <div class="price">$499/mo</div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="icon">📞</div>
+          <h3>Small Business (Business)</h3>
+          <div class="loss">Loses $3,000-20,000/mo (retail, liquor, shop)</div>
+          <div class="solution">Answers every call. Takes messages. Books appointments. Cheaper than hiring.</div>
+          <div class="price">$299/mo</div>
+        </div>
+
+        <div class="vertical-card">
+          <div class="icon">🍽️</div>
+          <h3>Restaurant (Mamma)</h3>
+          <div class="loss">Loses $8,000-32,000/mo in reservations</div>
+          <div class="solution">Books tables. Manages waitlist. Takes catering orders. Party of 8 = $800 captured.</div>
+          <div class="price">$199-399/mo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <h2>Simple Pricing</h2>
+      <p class="subtitle">One captured call pays for the month. Everything else is profit.</p>
+      <div class="pricing-cards">
+        <div class="card">
+          <h3>Solo</h3>
+          <div class="price">$299</div>
+          <div class="period">per month</div>
+          <ul>
+            <li>500 calls answered/month</li>
+            <li>SMS intake only</li>
+            <li>Basic urgency triage</li>
+            <li>1 user seat</li>
+            <li>Email support</li>
+          </ul>
+          <button onclick="window.location.href='#demo'">Start Trial</button>
+        </div>
+
+        <div class="card featured">
+          <h3>Team</h3>
+          <div class="price">$399</div>
+          <div class="period">per month</div>
+          <ul>
+            <li>Unlimited calls answered</li>
+            <li>SMS + Voice intake</li>
+            <li>Priority triage</li>
+            <li>5 user seats</li>
+            <li>Calendar sync</li>
+            <li>Priority support</li>
+          </ul>
+          <button onclick="window.location.href='#demo'">Start Trial</button>
+        </div>
+
+        <div class="card">
+          <h3>Enterprise</h3>
+          <div class="price">$499</div>
+          <div class="period">per month</div>
+          <ul>
+            <li>Everything in Team</li>
+            <li>Multi-location routing</li>
+            <li>White-label portal</li>
+            <li>API access</li>
+            <li>Unlimited seats</li>
+            <li>SLA support</li>
+          </ul>
+          <button onclick="window.location.href='#demo'">Start Trial</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-cta" id="demo">
+    <div class="container">
+      <h2>See It In Action</h2>
+      <p>Call your business phone. Now call Botwave. See the difference?</p>
+      <div class="phone-demo">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div><strong>Call your business</strong> - Goes to voicemail (you don't answer)</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div><strong>Call Botwave</strong> - Answers instantly: "Thanks for calling. What's your emergency?"</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div><strong>See the money</strong> - 5 missed calls/week × $450 = $9,000/mo lost. Botwave = $399. Profit = $8,601.</div>
+        </div>
+      </div>
+      <p style="color: var(--text-muted); margin-bottom: 30px;">
+        <strong>Try any bot now on Telegram:</strong><br>
+        @Boti1904 (Plumber) · @PaperChaser (Electrician) · @Trades (HVAC) ·<br>
+        @Captain (Locksmith) · @Design (GC) · @Business (Small Biz) · @Mamma (Restaurant)
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>Built for baby boomer business owners who don't care about AI.</p>
+      <p style="margin-top: 10px;">They care about answered phones and more customers.</p>
+      <p style="margin-top: 20px;">
+        <a href="mailto:hello@botwave.io">hello@botwave.io</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const lossData = {
+      plumber: { calls: 5, value: 450, price: 399 },
+      electrician: { calls: 4, value: 350, price: 399 },
+      hvac: { calls: 15, value: 400, price: 399 },
+      locksmith: { calls: 5, value: 200, price: 349 },
+      gc: { calls: 3, value: 50000, price: 499 },
+      retail: { calls: 15, value: 100, price: 299 },
+      restaurant: { calls: 10, value: 400, price: 399 }
+    };
+
+    function calculate() {
+      const type = document.getElementById('business-type').value;
+      const calls = parseInt(document.getElementById('missed-calls').value) || lossData[type].calls;
+      const value = parseInt(document.getElementById('job-value').value) || lossData[type].value;
+      const price = lossData[type].price;
+
+      const monthlyLoss = calls * value * 4;
+      const savings = monthlyLoss - price;
+
+      document.getElementById('monthly-loss').textContent = '$' + monthlyLoss.toLocaleString();
+      document.getElementById('botwave-savings').textContent = '$' + savings.toLocaleString() + '/mo profit with Botwave';
+
+      // Color code based on savings
+      const resultEl = document.querySelector('.loss-result .amount');
+      if (savings > 5000) {
+        resultEl.style.color = '#00dc82'; // Green - huge savings
+      } else if (savings > 1000) {
+        resultEl.style.color = '#f59e0b'; // Yellow - good savings
+      } else {
+        resultEl.style.color = '#ef4444'; // Red - still worth it
+      }
+    }
+
+    document.getElementById('business-type').addEventListener('change', calculate);
+    document.getElementById('missed-calls').addEventListener('input', calculate);
+    document.getElementById('job-value').addEventListener('input', calculate);
+
+    // Initialize
+    calculate();
+  </script>
+</body>
+</html>

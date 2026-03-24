@@ -1,0 +1,185 @@
+# Botwave .gitignore
+
+# Environment files (NEVER commit secrets)
+.env
+.env.*
+!.env.example
+!.env.secure.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+*.cover
+*.py,cover
+*.pyc
+*.pyo
+*.pyd
+*~
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Logs
+logs/
+*.log
+*.log.*
+LATEST*.LOG
+log/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+*.lsof
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for instrumented libs
+lib-cov/
+
+# Coverage directory
+coverage/
+*.lcov
+.nyc_output/
+
+# Grunt
+.grunt
+
+# Node
+.node-repl-temp/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+
+# Testing
+coverage/
+.nyc_output/
+jacoco.exec
+.clover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Rope
+.ropeproject
+
+# mkdocs
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.fleetignore
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.tmp/
+
+# Botwave specific
+data/*.json
+!data/.gitkeep
+backups/
+*.bundle
+*.db
+*.sqlite
+*.sqlite3
+
+# Vault secrets
+vault/
+!.vault/.gitkeep
+
+# Demo data
+demo/
+!.demo/.gitkeep
+
+# Local model configs
+local-model-config.json
+
+# Aider
+.aider/
+!aider.*.md
+
+# TLSFuzzer
+tlsfuzzer/
+
+# OpenClaw workspace
+openclaw/

@@ -1,0 +1,16 @@
+=== BOTWAVE LOCAL MARKET PRICE AUDIT ===
+Updated: 2026-03-11 16:56:45
+
+MARKET SHIFTS DETECTED:
+
+CURRENT COMMODITY PRICING:
+- 3-Inch Pvc Pipe (10Ft): $18.51
+- 1/2-Inch Type L Copper (10Ft): $37.12
+- Uponor Pex-A 1/2-Inch (100Ft): $46.29
+- 50-Gallon Electric Water Heater: $780.35
+- Kohler Elongated Toilet: $223.30
+- Romex 12/2 Wire (250Ft): $124.81
+- 2X4X8 Premium Stud: $3.31
+- Pvc Primer & Cement Pack: $15.35
+- Water Heater Expansion Tank: $52.67
+- Disposal Fee (Per Trip): $150.00
