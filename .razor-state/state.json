@@ -1,0 +1,99 @@
+{
+  "nodes": {
+    "pop-os": {
+      "ip": "100.124.152.86",
+      "name": "The Temple",
+      "role": "primary",
+      "agents": [
+        "claude",
+        "aider",
+        "razor-master"
+      ],
+      "capabilities": [
+        "coding",
+        "building",
+        "docker",
+        "llm-local"
+      ],
+      "status": "online",
+      "lastSeen": "2026-03-24T06:36:02.302Z"
+    },
+    "fyl": {
+      "ip": "100.114.102.1",
+      "name": "The Blade",
+      "role": "secondary",
+      "agents": [
+        "kali",
+        "razor-worker"
+      ],
+      "capabilities": [
+        "pentesting",
+        "security",
+        "mobile-ops"
+      ],
+      "status": "online",
+      "lastSeen": "2026-03-24T06:36:02.373Z"
+    }
+  },
+  "agents": {
+    "claude": {
+      "name": "The Scribe",
+      "trueName": "Claude Code Agent",
+      "node": "pop-os",
+      "type": "development",
+      "symbol": "🧙",
+      "cmd": "claude",
+      "args": [],
+      "workingDir": "/home/gringo/Projects",
+      "env": {
+        "ANTHROPIC_API_KEY": ""
+      },
+      "status": "stopped",
+      "pid": null,
+      "lastActivity": null
+    },
+    "aider": {
+      "name": "The Smith",
+      "trueName": "Aider Agent",
+      "node": "pop-os",
+      "type": "development",
+      "symbol": "🔧",
+      "cmd": "aider",
+      "args": [
+        "--model",
+        "claude-3-5-sonnet-20241022"
+      ],
+      "workingDir": "/home/gringo/Projects",
+      "env": {
+        "ANTHROPIC_API_KEY": ""
+      },
+      "status": "stopped",
+      "pid": null,
+      "lastActivity": null
+    },
+    "kali": {
+      "name": "The Warrior",
+      "trueName": "Kali Pentesting Agent",
+      "node": "fyl",
+      "type": "security",
+      "symbol": "⚔️",
+      "cmd": "ssh",
+      "args": [
+        "-o",
+        "StrictHostKeyChecking=no",
+        "lyfer1904@100.114.102.1",
+        "tmux",
+        "new-session",
+        "-d",
+        "-s",
+        "kali-agent"
+      ],
+      "workingDir": "/",
+      "env": {},
+      "status": "stopped",
+      "pid": null,
+      "lastActivity": null
+    }
+  },
+  "lastUpdate": "2026-03-24T06:36:07.216Z"
+}
